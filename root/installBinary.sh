@@ -9,6 +9,7 @@ addVarToConf "plex_distro" "${PLEX_DISTRO}"
 if [ ! -z "${URL}" ]; then
   echo "Attempting to install from URL: ${URL}"
   installFromRawUrl "${URL}"
+  applyOverrides
 elif [ "${TAG}" != "beta" ] && [ "${TAG}" != "public" ]; then
   getVersionInfo "${TAG}" "" remoteVersion remoteFile
 
@@ -19,4 +20,5 @@ elif [ "${TAG}" != "beta" ] && [ "${TAG}" != "public" ]; then
   
   echo "Attempting to install: ${remoteVersion}"
   installFromUrl "${remoteFile}"
+  applyOverrides
 fi

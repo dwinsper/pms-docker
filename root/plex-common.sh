@@ -74,3 +74,9 @@ function installFromRawUrl {
   dpkg -i --force-confold /tmp/plexmediaserver.deb
   rm -f /tmp/plexmediaserver.deb
 }
+
+function applyOverrides {
+  echo "Applying profile overrides..."
+  cp /plex-overrides/* /usr/lib/plexmediaserver/Resources/Profiles
+  echo "Overrides applied"
+}
