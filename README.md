@@ -33,6 +33,8 @@ docker run \
 plexinc/pms-docker
 ```
 
+Note: If your `/etc/hosts` file is missing an entry for `localhost`, you should add one before using host networking.
+
 ### Macvlan Networking
 
 ```
@@ -63,7 +65,6 @@ docker run \
 -d \
 --name plex \
 -p 32400:32400/tcp \
--p 3005:3005/tcp \
 -p 8324:8324/tcp \
 -p 32469:32469/tcp \
 -p 1900:1900/udp \
@@ -88,12 +89,16 @@ Note: In this configuration, you must do some additional configuration:
 
 ### Using `docker-compose` on ARM devices
 
-The provided `docker-compose` templates use the `plexinc/pms-docker` image which is the amd64 build and won't work on ARM devices.
+The provided `docker-compose` templates use the `plexinc/pms-docker` image from [Dockerhub](https://hub.docker.com/r/plexinc/pms-docker) which is currently only build for `amd64` and won't work on ARM devices.
 
-To use `docker-compose` with ARM devices, you must first build one of the ARM images locally.
+To use `docker-compose` with ARM devices, you must first build the image for ARM locally.
 
 ```sh
-docker build -t plexinc/pms-docker:latest -f Dockerfile.armv7 . # or arm64
+docker build --platform linux/arm64 -t plexinc/pms-docker:latest .
+```
+or
+```sh
+docker build --platform linux/arm/v7 -t plexinc/pms-docker:latest .
 ```
 
 Then you can `docker-compose up`.

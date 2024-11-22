@@ -67,10 +67,10 @@ fi
 if [ "${CHANGE_CONFIG_DIR_OWNERSHIP,,}" = "true" ]; then
   if [ -f "${prefFile}" ]; then
     if [ ! "$(stat -c %u "${prefFile}")" = "$(id -u plex)" ]; then
-      chown -R plex:plex /config
+      find /config \! \( -uid $(id -u plex) -gid $(id -g plex) \) -print0 | xargs -0 chown -h plex:plex
     fi
   else
-    chown -R plex:plex /config
+    find /config \! \( -uid $(id -u plex) -gid $(id -g plex) \) -print0 | xargs -0 chown -h plex:plex
   fi
   chown -R plex:plex /transcode
 fi
@@ -100,6 +100,9 @@ fi
 
 # Get server token and only turn claim token into server token if we have former but not latter.
 token="$(getPref "PlexOnlineToken")"
+if [ -z "${PLEX_CLAIM}" ] && [ -f "${PLEX_CLAIM_FILE}" ]; then
+  PLEX_CLAIM=$(cat ${PLEX_CLAIM_FILE})
+fi
 if [ ! -z "${PLEX_CLAIM}" ] && [ -z "${token}" ]; then
   echo "Attempting to obtain server token from claim token"
   loginInfo="$(curl -X POST \
